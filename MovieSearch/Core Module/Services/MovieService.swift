@@ -29,7 +29,7 @@ enum MovieAPI: APIConfiguration {
     var path: String {
         switch self {
         case .getDetails:
-            return "/search/movie"
+            return "/3/search/movie"
         case .getPoster(let file):
             return "/t/p/w600_and_h900_bestv2/\(file)"
         }
@@ -82,7 +82,7 @@ enum MovieAPI: APIConfiguration {
 
 class MovieService {
 
-    func getMovieDetails(query: String, completion: @escaping (Result<[String]>) -> Void) {
+    func getMovieDetails(query: String, completion: @escaping (Result<MovieList>) -> Void) {
        return NetworkLayer().get(request: MovieAPI.getDetails(query: query).asURLRequest(), completion: completion)
     }
 
