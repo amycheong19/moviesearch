@@ -10,7 +10,7 @@ import Foundation
 
 struct Server {
     struct Movie {
-        static let baseURL = "api.themoviedb.org/3"
+        static let baseURL = "api.themoviedb.org"
         static let apiKey = "2a61185ef6a27f400fd92820ad9e8537"
     }
 
