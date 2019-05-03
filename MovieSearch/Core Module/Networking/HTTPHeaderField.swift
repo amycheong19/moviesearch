@@ -14,22 +14,19 @@ public enum ContentType: String {
 }
 
 public enum HttpHeaderField {
-    case acceptLanguage(String)
-    case authorization(String)
+    case accept(ContentType)
     case contentType(ContentType)
 
     public var key: String {
         switch self {
-        case .acceptLanguage: return "Accept-Language"
-        case .authorization: return "Authorization"
+        case .accept: return "Accept"
         case .contentType: return "Content-Type"
         }
     }
 
     public var value: String {
         switch self {
-        case let .authorization(token): return token.isEmpty ? "" : "Bearer \(token)"
-        case let .acceptLanguage(language): return language
+        case let .accept(contentType): return contentType.rawValue
         case let .contentType(contentType): return contentType.rawValue
         }
     }

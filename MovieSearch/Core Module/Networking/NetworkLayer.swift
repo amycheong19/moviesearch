@@ -21,9 +21,6 @@ class NetworkLayer {
       return urlResponse.statusCode >= 200 && urlResponse.statusCode < 300
    }
 
-
-
-
    func get<ExpectedResult: Codable>(request: URLRequest,
                                      completion: @escaping (Result<ExpectedResult>) -> Void) {
 

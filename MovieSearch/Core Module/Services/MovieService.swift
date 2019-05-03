@@ -31,7 +31,7 @@ enum MovieAPI: APIConfiguration {
         case .getDetails:
             return "/3/search/movie"
         case .getPoster(let file):
-            return "/t/p/w600_and_h900_bestv2/\(file)"
+            return "/t/p/w600_and_h900_bestv2\(file)"
         }
     }
 
@@ -45,6 +45,8 @@ enum MovieAPI: APIConfiguration {
     var query: [URLQueryItem] {
         switch self {
         case .getDetails(let query):
+//            let formatted = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+//            debugPrint(formatted)
             let queryItemAPI = URLQueryItem(name: Server.APIParameterKey.api,
                                               value: Server.Movie.apiKey)
             let queryItemQuery = URLQueryItem(name: Server.APIParameterKey.query,
@@ -65,17 +67,15 @@ enum MovieAPI: APIConfiguration {
     }
     
     var headers: [HttpHeaderField] {
-        return [HttpHeaderField.contentType(ContentType.json)]
+        return [HttpHeaderField.contentType(ContentType.formUrlEncoded), HttpHeaderField.accept(ContentType.json)]
     }
 
     func asURLRequest() -> URLRequest {
-        let url = UrlBuilder(host: baseURL, path: path, query: query).buildUrl()!
-        let jsonEncoder = JSONEncoder()
-        jsonEncoder.dateEncodingStrategy = .iso8601
-
+        let url = UrlBuilder(host: baseURL, path: path, query: query).buildUrl()
         let urlRequest = JsonBodyUrlRequestBuilder(httpMethod: method,
                                                    httpHeaders: headers,
                                                    url: url).buildUrlRequest()
+
         return urlRequest
     }
 }
@@ -85,10 +85,5 @@ class MovieService {
     func getMovieDetails(query: String, completion: @escaping (Result<MovieList>) -> Void) {
        return NetworkLayer().get(request: MovieAPI.getDetails(query: query).asURLRequest(), completion: completion)
     }
-
-    func getPoster(file: String, completion: @escaping (Result<[String]>) -> Void) {
-        return NetworkLayer().get(request: MovieAPI.getPoster(file: file).asURLRequest(), completion: completion)
-    }
-
 }
 
