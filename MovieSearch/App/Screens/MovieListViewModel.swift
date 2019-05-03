@@ -17,7 +17,7 @@ class MovieListViewModel {
     }
 
     init() {
-        getMovie(by: "Harry Potter")
+        getMovie(by: "Home Alone")
     }
 
     func getMovie(by query: String) {

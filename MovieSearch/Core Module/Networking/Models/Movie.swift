@@ -11,11 +11,14 @@ import Foundation
 struct Movie: Codable {
     var title: String
     var poster_path: String?
-    var overview: String?
-
-    init(title: String, poster: String?, overview: String?) {
-        self.title = title
-        self.poster_path = poster
-        self.overview = overview
+    var posterLink: URL? {
+        guard let path = poster_path else { return nil }
+        let posterAPI = MovieAPI.getPoster(file: path)
+        //TODO: Find out why encoding error when include baseURL
+        return URL(string: "https://image.tmdb.org" + posterAPI.path)!
     }
+
+    var overview: String?
+    var vote_count: Int
+
 }

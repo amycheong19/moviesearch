@@ -13,7 +13,13 @@ struct UrlBuilder {
     let path: String
     let query: [URLQueryItem]
 
-    func buildUrl() -> URL! {
+    init(host: String, path: String, query: [URLQueryItem] = []) {
+        self.host = host
+        self.path = path
+        self.query = query
+    }
+
+    func buildUrl() -> URL {
         var components = URLComponents()
         components.scheme = "https"
         components.host = host
@@ -21,6 +27,6 @@ struct UrlBuilder {
         components.queryItems = !query.isEmpty ? query : nil
 
         let formattedString = components.url!.absoluteString
-        return URL(string: formattedString)
+        return URL(string: formattedString)!
     }
 }
