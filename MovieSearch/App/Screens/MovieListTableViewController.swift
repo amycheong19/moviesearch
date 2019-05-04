@@ -20,11 +20,11 @@ class MovieListTableViewController: UITableViewController, ViewModelable, ErrorM
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search for Movie"
         searchController.searchBar.delegate = self
-        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.searchBar.tintColor = #colorLiteral(red: 0.1002229676, green: 0.6974583268, blue: 0.9604492784, alpha: 1)
 
+        navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.searchController = searchController
         definesPresentationContext = true
-
 
         tableView.rowHeight = UITableView.automaticDimension        
         viewModel.tableDataHandler = { [weak self] _ in
@@ -47,7 +47,7 @@ class MovieListTableViewController: UITableViewController, ViewModelable, ErrorM
         cell.descLabel.text = viewModel.movies[indexPath.row].overview
         let posterLink = viewModel.movies[indexPath.row].posterLink
         if let url = posterLink {
-            cell.posterImageView.load(url: url, placeholder: nil)
+            cell.posterImageView.load(url: url, placeholder: #imageLiteral(resourceName: "Placeholder"))
         }
 
         // Check if the last row number is the same as the last current data element
