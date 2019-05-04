@@ -17,14 +17,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" id="OpH-zt-zYA">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            <textInputTraits key="textInputTraits"/>
-                        </searchBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MovieListTableViewCell" rowHeight="154" id="djM-PY-BNh" customClass="MovieListTableViewCell" customModule="MovieSearch" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="72" width="414" height="154"/>
+                                <rect key="frame" x="0.0" y="28" width="414" height="154"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="djM-PY-BNh" id="1r5-ie-hQ2">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="153.5"/>
@@ -36,6 +31,11 @@
                                                 <constraint firstAttribute="width" constant="114" id="Jr7-pP-p6H"/>
                                                 <constraint firstAttribute="height" constant="180" id="iie-hS-L7R"/>
                                             </constraints>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                    <integer key="value" value="4"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VsG-Vb-uAv">
                                             <rect key="frame" x="124" y="10" width="280" height="25"/>
@@ -57,10 +57,10 @@
                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="6Eg-VU-h9K" secondAttribute="bottom" constant="10" id="Sf3-FF-MxS"/>
                                         <constraint firstItem="VsG-Vb-uAv" firstAttribute="top" secondItem="1r5-ie-hQ2" secondAttribute="top" constant="10" id="ZF2-sJ-0AM"/>
                                         <constraint firstItem="6Eg-VU-h9K" firstAttribute="leading" secondItem="aRH-Ua-PTd" secondAttribute="trailing" constant="10" id="bKb-4Z-8ez"/>
+                                        <constraint firstAttribute="bottom" secondItem="aRH-Ua-PTd" secondAttribute="bottom" priority="250" id="cy5-q1-lFf"/>
                                         <constraint firstItem="aRH-Ua-PTd" firstAttribute="leading" secondItem="1r5-ie-hQ2" secondAttribute="leading" id="fgL-bD-CVk"/>
                                         <constraint firstItem="6Eg-VU-h9K" firstAttribute="top" secondItem="VsG-Vb-uAv" secondAttribute="bottom" constant="10" id="jMA-kv-wQb"/>
                                         <constraint firstAttribute="trailing" secondItem="VsG-Vb-uAv" secondAttribute="trailing" constant="10" id="lla-GO-8vP"/>
-                                        <constraint firstAttribute="bottom" secondItem="aRH-Ua-PTd" secondAttribute="bottom" priority="750" id="oz4-RY-RRz"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -92,10 +92,19 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
+                        <outlet property="searchDisplayController" destination="36L-ut-q6W" id="Bwf-2T-nBD"/>
                         <segue destination="8vx-2f-y8T" kind="relationship" relationship="rootViewController" id="QCc-AX-H5y"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aYV-dh-XRF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="36L-ut-q6W">
+                    <connections>
+                        <outlet property="delegate" destination="Ccc-QT-ueO" id="TEg-3x-Yks"/>
+                        <outlet property="searchContentsController" destination="Ccc-QT-ueO" id="Xzu-As-33e"/>
+                        <outlet property="searchResultsDataSource" destination="Ccc-QT-ueO" id="9ex-QA-ZeG"/>
+                        <outlet property="searchResultsDelegate" destination="Ccc-QT-ueO" id="fuR-LS-9ir"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="131.8840579710145" y="137.94642857142856"/>
         </scene>

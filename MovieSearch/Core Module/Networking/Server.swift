@@ -21,5 +21,6 @@ struct Server {
     struct APIParameterKey {
         static let api = "api_key"
         static let query = "query"
+        static let page = "page"
     }
 }

@@ -14,7 +14,7 @@ protocol APIConfiguration {
 }
 
 enum MovieAPI: APIConfiguration {
-    case getDetails(query: String)
+    case getDetails(query: String, page: Int)
     case getPoster(file: String)
 
     var baseURL: String {
@@ -44,14 +44,15 @@ enum MovieAPI: APIConfiguration {
 
     var query: [URLQueryItem] {
         switch self {
-        case .getDetails(let query):
-//            let formatted = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-//            debugPrint(formatted)
+        case .getDetails(let query, let page):
             let queryItemAPI = URLQueryItem(name: Server.APIParameterKey.api,
                                               value: Server.Movie.apiKey)
             let queryItemQuery = URLQueryItem(name: Server.APIParameterKey.query,
                                               value: query)
-            return [queryItemAPI, queryItemQuery]
+            let queryItemPage = URLQueryItem(name: Server.APIParameterKey.page,
+                                              value: "\(page)")
+
+            return [queryItemAPI, queryItemQuery, queryItemPage]
         case .getPoster:
             return []
         }
@@ -81,9 +82,13 @@ enum MovieAPI: APIConfiguration {
 }
 
 class MovieService {
-
-    func getMovieDetails(query: String, completion: @escaping (Result<MovieList>) -> Void) {
-       return NetworkLayer().get(request: MovieAPI.getDetails(query: query).asURLRequest(), completion: completion)
+    var movieDetailDataTask: URLSessionDataTask?
+    func getMovieDetails(query: String, page: Int,
+                         completion: @escaping (Result<MovieList>) -> Void) {
+        movieDetailDataTask?.cancel()
+        movieDetailDataTask = NetworkLayer().get(request: MovieAPI.getDetails(query: query,
+                                                               page: page).asURLRequest(),
+                                  completion: completion)
     }
 }
 

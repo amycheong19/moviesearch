@@ -12,11 +12,21 @@ class MovieListTableViewController: UITableViewController, ViewModelable, ErrorM
 
     typealias ViewModel = MovieListViewModel
     var viewModel: ViewModel! = ViewModel()
+    lazy var searchController = UISearchController(searchResultsController: nil)
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.rowHeight = UITableView.automaticDimension
+        // Setup the Search Controller
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search for Movie"
+        searchController.searchBar.delegate = self
+        navigationItem.hidesSearchBarWhenScrolling = false
 
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+
+
+        tableView.rowHeight = UITableView.automaticDimension        
         viewModel.tableDataHandler = { [weak self] _ in
             self?.tableView.reloadData()
         }
@@ -28,19 +38,32 @@ class MovieListTableViewController: UITableViewController, ViewModelable, ErrorM
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.movieList.count
+        return viewModel.movies.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: MovieListTableViewCell = tableView.dequeueCell(with: indexPath)
-        cell.titleLabel.text = viewModel.movieList[indexPath.row].title
-        cell.descLabel.text = viewModel.movieList[indexPath.row].overview
-        let posterLink = viewModel.movieList[indexPath.row].posterLink
+        cell.titleLabel.text = viewModel.movies[indexPath.row].title
+        cell.descLabel.text = viewModel.movies[indexPath.row].overview
+        let posterLink = viewModel.movies[indexPath.row].posterLink
         if let url = posterLink {
             cell.posterImageView.load(url: url, placeholder: nil)
         }
 
+        // Check if the last row number is the same as the last current data element
+        if indexPath.row == viewModel.movies.count - 1 {
+            viewModel.getMovie(by: searchController.searchBar.text!, reset: false)
+        }
         return cell
     }
 
+}
+
+// MARK: -UISearchBarDelegate
+extension MovieListTableViewController: UISearchBarDelegate {
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        guard let text = searchBar.text  else { return }
+        viewModel.getMovie(by: text)
+    }
 }
