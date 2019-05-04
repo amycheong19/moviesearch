@@ -90,5 +90,9 @@ class MovieService {
                                                                page: page).asURLRequest(),
                                   completion: completion)
     }
+
+    func downloadPoster(url: URL, completion: @escaping (Result<Data>) -> Void) {
+       return NetworkLayer().download(url: url, completion: completion)
+    }
 }
 

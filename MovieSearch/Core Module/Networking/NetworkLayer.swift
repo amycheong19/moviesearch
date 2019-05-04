@@ -21,7 +21,6 @@ class NetworkLayer {
         return urlResponse.statusCode >= 200 && urlResponse.statusCode < 300
     }
     
-    
     func get<ExpectedResult: Codable>(request: URLRequest,
                                       completion: @escaping (Result<ExpectedResult>) -> Void) -> URLSessionDataTask {
         
@@ -42,14 +41,15 @@ class NetworkLayer {
         let task = session.dataTask(with: request) { (data, urlResponse, error) in
             if let error = error {
                 print(error.localizedDescription)
-                fail(error: Error.generic)
+                let networkError = NetworkErrorParser().parse(error: error)
+                fail(error: networkError)
                 return
             }
             
             if self.isSuccessCode(urlResponse) {
                 guard let data = data else {
-                    print("Unable to parse the response in given type \(ExpectedResult.self)")
-                    return fail(error: Error.generic)
+                    debugPrint("Unable to parse the response in given type \(ExpectedResult.self)")
+                    return fail(error: APIError.parseError)
                 }
                 
                 if let responseObject = try? JSONDecoder().decode(ExpectedResult.self, from: data) {
@@ -57,48 +57,47 @@ class NetworkLayer {
                     return
                 }
             }
-            fail(error: Error.generic)
+
+            fail(error: NetworkError.generic)
         }
         task.resume()
         
         return task
     }
-    
-    func post<ExpectedResult: Codable>(request: URLRequest,
-                                       body: ExpectedResult,
-                                       completion: @escaping (Result<ExpectedResult>) -> Void) {
-        
+
+    func download(url: URL, completion: @escaping (Result<Data>) -> Void) {
         func fail(error: Error) {
             DispatchQueue.main.async {
                 completion(.error(error))
             }
         }
-        
-        func success(data: ExpectedResult) {
+
+        func success(data: Data) {
             DispatchQueue.main.async {
                 completion(.success(data))
             }
         }
-        
-        var request = request
-        guard let data = try? JSONEncoder().encode(body) else {
-            return fail(error: Error.parseError)
+
+        let session = URLSession.shared
+        let task = session.downloadTask(with: url) { (data, urlResponse, error) in
+            if let error = error {
+                let networkError = NetworkErrorParser().parse(error: error)
+                fail(error: networkError)
+                return
+            }
+
+            if self.isSuccessCode(urlResponse) {
+                guard let data = try? Data(contentsOf: url) else {
+                    return fail(error: NetworkError.generic)
+                }
+                success(data: data)
+                return
+                
+            }
+
+            fail(error: NetworkError.generic)
         }
-        request.httpBody = data
-        URLSession.shared.uploadTask(with: request,
-                                     from: data) { (data, urlResponse, error) in
-                                        if self.isSuccessCode(urlResponse) {
-                                            guard let data = data else {
-                                                print("Unable to parse the response in given type \(ExpectedResult.self)")
-                                                return fail(error: Error.generic)
-                                            }
-                                            if let responseObject = try? JSONDecoder().decode(ExpectedResult.self, from: data) {
-                                                success(data: responseObject)
-                                                return
-                                            }
-                                        }
-                                        fail(error: Error.generic)
-            }.resume()
+        task.resume()
+
     }
-    
 }

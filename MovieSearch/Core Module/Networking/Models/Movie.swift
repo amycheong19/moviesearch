@@ -9,6 +9,7 @@
 import Foundation
 
 struct Movie: Codable {
+    var id: Int
     var title: String
     var poster_path: String?
     var posterLink: URL? {
