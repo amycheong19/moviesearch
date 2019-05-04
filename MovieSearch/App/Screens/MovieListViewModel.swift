@@ -10,23 +10,42 @@ import Foundation
 
 class MovieListViewModel {
     private(set) var movieService = MovieService()
+    private var movieList: MovieList?
 
     var tableDataHandler: (([Movie]) -> ())?
-    private(set) var movieList: [Movie] = [] {
-        didSet { tableDataHandler?(movieList) }
+    private(set) var movies: [Movie] = [] {
+        didSet { tableDataHandler?(movies) }
     }
 
-    init() {
-        getMovie(by: "Home Alone")
-    }
+    func getMovie(by query: String, reset: Bool = true) {
+        guard query.count != 0  else {
+            self.movies = []
+            movieList = nil
+            return
+        }
 
-    func getMovie(by query: String) {
-        movieService.getMovieDetails(query: query) { [weak self] result in
+        if reset {
+            movieList = nil
+            movies = []
+        }
+
+
+        // Stop searching when nextPage < movieList.totalPage
+        // We don't want to have too many API calls
+        var nextPage = 1
+        if let movieList = movieList {
+            nextPage = movieList.page + 1
+            if nextPage > movieList.total_pages { return }
+        }
+
+        movieService.getMovieDetails(query: query, page: nextPage) { [weak self] result in
             guard let `self` = self else { return }
             switch result {
             case .success(let list):
                 guard let list = list else { return }
-                self.movieList = list.results
+                self.movieList = list
+                self.movies += list.results
+
             case .error(let error):
                 debugPrint(error)
             }
