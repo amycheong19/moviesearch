@@ -10,20 +10,17 @@ import UIKit
 
 enum Style {
     enum View {
-        static func shadow() -> UIViewStyle<UIView> {
-            return UIViewStyle<UIView> {
-                $0.layer.masksToBounds = false
-                $0.layer.shadowColor = UIColor.black.cgColor
-                $0.layer.shadowOpacity = 1.0
-                $0.layer.shadowOffset = .zero
-                $0.layer.shadowRadius = 15
-            }
-        }
-
         static func cornerRadius() -> UIViewStyle<UIView> {
             return UIViewStyle<UIView> {
                 $0.layer.masksToBounds = true
                 $0.layer.cornerRadius = 5.0
+            }
+        }
+
+        static func opacity(by percentage: Float, color: UIColor) -> UIViewStyle<UIView> {
+            return UIViewStyle<UIView> {
+                $0.layer.opacity = percentage
+                $0.backgroundColor = color
             }
         }
     }
