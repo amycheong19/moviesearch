@@ -23,15 +23,15 @@ class MovieListTableViewController: UITableViewController, ViewModelable, ErrorM
         searchBar.barTintColor = .white
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.textColor = UIColor.blue
+            textfield.textColor = .blue
             if let backgroundview = textfield.subviews.first {
 
                 // Background color
-                backgroundview.backgroundColor = UIColor.white
+                backgroundview.backgroundColor = #colorLiteral(red: 0.3960784314, green: 0.4666666667, blue: 0.5254901961, alpha: 1)
 
                 // Rounded corner
-                backgroundview.layer.cornerRadius = 10;
-                backgroundview.clipsToBounds = true;
+                backgroundview.layer.cornerRadius = 10
+                backgroundview.clipsToBounds = true
             }
         }
         return searchController

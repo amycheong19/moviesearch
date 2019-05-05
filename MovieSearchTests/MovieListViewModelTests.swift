@@ -23,8 +23,7 @@ class MovieListViewModelTests: XCTestCase {
     // Normal list loading
     func testGetMovieListWithRightQuery() {
         viewModel.tableDataHandler = { [weak self] result in
-            
-
+        
             XCTAssertEqual(result.movies.count, 20)
             self?.expectation.fulfill()
         }
