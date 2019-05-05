@@ -34,5 +34,16 @@ public enum NetworkError: Error {
     case offline
     case cancelled
     case generic
+
+    var message: String {
+        switch self {
+        case .offline:
+            return "This device is currently offline"
+        case .cancelled:
+            return "Action has been cancelled"
+        case .generic:
+            return "Please try again later."
+        }
+    }
 }
 

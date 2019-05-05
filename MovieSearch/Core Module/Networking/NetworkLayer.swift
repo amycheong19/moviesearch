@@ -40,7 +40,7 @@ class NetworkLayer {
         
         let task = session.dataTask(with: request) { (data, urlResponse, error) in
             if let error = error {
-                print(error.localizedDescription)
+                debugPrint(error.localizedDescription)
                 let networkError = NetworkErrorParser().parse(error: error)
                 fail(error: networkError)
                 return

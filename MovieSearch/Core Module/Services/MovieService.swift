@@ -57,18 +57,9 @@ enum MovieAPI: APIConfiguration {
             return []
         }
     }
-
-    var sampleData: Data? {
-        switch self {
-        case .getDetails:
-            return "{\"\(Server.APIParameterKey.api)\": \(Server.Movie.apiKey), \"\(Server.APIParameterKey.query)\": \"Harry%20Potter\"}".utf8Encoded
-        case .getPoster:
-            return nil
-        }
-    }
     
     var headers: [HttpHeaderField] {
-        return [HttpHeaderField.contentType(ContentType.formUrlEncoded), HttpHeaderField.accept(ContentType.json)]
+        return [HttpHeaderField.contentType(ContentType.json)]
     }
 
     func asURLRequest() -> URLRequest {
@@ -93,10 +84,6 @@ class MovieService {
 
     func downloadPoster(url: URL, completion: @escaping (Result<Data>) -> Void) {
        return NetworkLayer().download(url: url, completion: completion)
-    }
-
-    func downloadPoster(link: String, completion: @escaping (Result<Data>) -> Void) {
-        return NetworkLayer().download(url: MovieAPI.getPoster(file: link).asURLRequest().url!, completion: completion)
     }
 }
 

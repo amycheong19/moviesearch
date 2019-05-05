@@ -15,7 +15,7 @@ struct Server {
     }
 
     struct Poster {
-        static let baseURL = "​image.tmdb.org"
+        static let baseURL = "image.tmdb.org"
     }
 
     struct APIParameterKey {
