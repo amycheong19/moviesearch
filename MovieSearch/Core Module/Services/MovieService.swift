@@ -94,5 +94,9 @@ class MovieService {
     func downloadPoster(url: URL, completion: @escaping (Result<Data>) -> Void) {
        return NetworkLayer().download(url: url, completion: completion)
     }
+
+    func downloadPoster(link: String, completion: @escaping (Result<Data>) -> Void) {
+        return NetworkLayer().download(url: MovieAPI.getPoster(file: link).asURLRequest().url!, completion: completion)
+    }
 }
 

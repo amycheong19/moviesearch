@@ -99,8 +99,8 @@ class MovieListTableViewController: UITableViewController, ViewModelable, ErrorM
         cell.titleLabel.text = movie.title
         cell.descLabel.text = movie.overview
         cell.posterImageView.image = #imageLiteral(resourceName: "Placeholder")
-        let posterLink = movie.posterLink
-        if let url = posterLink {
+        
+        if let url = movie.posterLink {
             if let data = viewModel.imageCache.object(forKey: url as AnyObject) as? Data,
                 let img = UIImage(data: data) {
                 // Cached image used, no need to download it

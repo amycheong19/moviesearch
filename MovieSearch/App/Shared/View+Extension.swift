@@ -8,12 +8,12 @@
 
 import UIKit
 
-public extension UIView {
-   @objc dynamic public var nibContainerView: UIView {
+extension UIView {
+   @objc dynamic var nibContainerView: UIView {
       return self
    }
    
-   @objc dynamic public var nibName: String {
+   @objc dynamic var nibName: String {
       return String(describing: type(of: self))
    }
 
