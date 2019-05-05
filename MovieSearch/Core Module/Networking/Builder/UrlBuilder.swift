@@ -26,7 +26,7 @@ struct UrlBuilder {
         components.path = path
         components.queryItems = !query.isEmpty ? query : nil
 
-        let formattedString = components.url!.absoluteString
+        let formattedString = components.url!.absoluteString.removingPercentEncoding!
         return URL(string: formattedString)!
     }
 }

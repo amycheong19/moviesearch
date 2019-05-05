@@ -43,11 +43,19 @@ class MovieListTableViewController: UITableViewController, ViewModelable, ErrorM
         super.viewDidLoad()
         layout()
 
-        viewModel.tableDataHandler = { [weak self] _ in
-            self?.tableView.reloadData()
+        viewModel.tableDataHandler = { [weak self] result in
+            guard let `self` = self else { return }
+
+            if let error = result.error as? NetworkError {
+                self.presentPopup(title: "Error", message: error.message,
+                                  buttonTitle: "OK", onClose: {})
+
+            }
+            self.tableView.reloadData()
+
         }
 
-        // Loading for listing (
+        // Loading for listing
         viewModel.loadingDataHandler = { [weak self] isLoading in
             if isLoading {
                 self?.spinner.startAnimating()
@@ -58,12 +66,13 @@ class MovieListTableViewController: UITableViewController, ViewModelable, ErrorM
         }
 
         // Loading for poster images
-        viewModel.loadImageDataHandler = { [weak self] (data, indexPath) in
+        viewModel.loadImageDataHandler = { [weak self] imageDataAndIndexPath in
             guard let `self` = self,
-                let data = data, let indexPath = indexPath,
+                let data = imageDataAndIndexPath.data,
+                let indexPath = imageDataAndIndexPath.indexPath,
                 let img = UIImage(data: data) else { return }
 
-            DispatchQueue.main.async{
+            DispatchQueue.main.async {
                 // Before we assign the image, check whether the current cell is visible
                 if let updateCell = self.tableView.cellForRow(at: indexPath) as? MovieListTableViewCell {
                     updateCell.posterImageView.image = img
@@ -90,12 +99,12 @@ class MovieListTableViewController: UITableViewController, ViewModelable, ErrorM
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.movies.count
+        return viewModel.moviesResult.movies.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: MovieListTableViewCell = tableView.dequeueCell(with: indexPath)
-        let movie = viewModel.movies[indexPath.row]
+        let movie = viewModel.moviesResult.movies[indexPath.row]
         cell.titleLabel.text = movie.title
         cell.descLabel.text = movie.overview
         cell.posterImageView.image = #imageLiteral(resourceName: "Placeholder")
@@ -112,8 +121,9 @@ class MovieListTableViewController: UITableViewController, ViewModelable, ErrorM
 
         // Load more movies
         // Check if the last row number is the same as the last current data element
-        if indexPath.row == viewModel.movies.count - 1 {
-            viewModel.getMovie(by: searchController.searchBar.text!, reset: false)
+        if let text = searchController.searchBar.text,
+            indexPath.row == viewModel.moviesResult.movies.count - 1 {
+            viewModel.getMovie(by: text, reset: false)
         }
         return cell
     }

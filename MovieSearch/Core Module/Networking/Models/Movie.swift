@@ -15,8 +15,7 @@ struct Movie: Codable {
     var posterLink: URL? {
         guard let path = poster_path else { return nil }
         let posterAPI = MovieAPI.getPoster(file: path)
-        //TODO: Find out why encoding error when include baseURL
-        return URL(string: "https://image.tmdb.org" + posterAPI.path)!
+        return posterAPI.asURLRequest().url
     }
 
     var overview: String?
